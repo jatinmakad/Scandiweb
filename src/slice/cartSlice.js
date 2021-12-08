@@ -24,15 +24,7 @@ export const cartSlice = createSlice({
     },
     filterCurrency(state, action) {
       state.currency = action.payload;
-      let total = 0;
-      state.carts.forEach((item) => {
-        item.prices.forEach((j) => {
-          if (j.currency === `${state.currency}`) {
-            total = total + j.amount * item.count;
-          }
-          return (state.grandTotal = total);
-        });
-      });
+      updateAmount(state);
     },
     addCart(state, action) {
       let cart = state.carts.slice();
@@ -40,42 +32,29 @@ export const cartSlice = createSlice({
       const { attributes } = action.payload;
       const { id } = action.payload;
       let items = [attributes];
+      for (let i = 0; i < attributes.length; i++) {
+        let item = {
+          att_id: attributes[i]?.id,
+          att_type: attributes[i]?.type,
+          pr_id: id,
+          att_value: attributes[i]?.items[0]?.displayValue,
+        };
+        items[i] = item;
+      }
       if (!cart.length) {
-        for (let i = 0; i < attributes.length; i++) {
-          let item = {
-            att_id: attributes[i]?.id,
-            att_type: attributes[i]?.type,
-            pr_id: id,
-            att_value: attributes[i]?.items[0]?.displayValue,
-          };
-          items[i] = item;
-        }
-        state.carts.push({
-          ...action.payload,
-          count: 1,
-          co: 1,
-          attributes: [...items],
-        });
-        alreadyInCart = true;
+        alreadyInCart = false;
       } else {
-        for (let i = 0; i < attributes.length; i++) {
-          let item = {
-            att_id: attributes[i]?.id,
-            att_type: attributes[i]?.type,
-            pr_id: id,
-            att_value: attributes[i]?.items[0]?.displayValue,
-          };
-          items[i] = item;
-        }
         cart.forEach((item) => {
           items.every((z) => {
-          item.attributes.filter((s) => {
-           if (_.isEqual(z, s)) {
+            item.attributes.filter((s) => {
+              if (_.isEqual(z, s)) {
                 alreadyInCart = true;
                 item.count++;
                 state.attributes = [];
               }
+              return false;
             });
+            return false;
           });
         });
       }
@@ -83,20 +62,12 @@ export const cartSlice = createSlice({
         state.carts.push({
           ...action.payload,
           count: 1,
-          co: 1,
+          co: 0,
           attributes: [...items],
         });
         state.attributes = [];
       }
-      let total = 0;
-      state.carts.forEach((item) => {
-        item.prices.forEach((j) => {
-          if (j.currency === `${state.currency}`) {
-            total = total + j.amount * item.count;
-          }
-          return (state.grandTotal = total);
-        });
-      });
+      updateAmount(state);
     },
     addToCart(state, action) {
       let attribute = state.attributes.slice();
@@ -110,27 +81,21 @@ export const cartSlice = createSlice({
               item.count++;
               state.attributes = [];
             }
+            return false;
           });
+          return false;
         });
       });
       if (!alreadyInCart) {
         state.carts.push({
           ...action.payload,
           count: 1,
-          co: 1,
+          co: 0,
           attributes: attribute,
         });
         state.attributes = [];
       }
-      let total = 0;
-      state.carts.forEach((item) => {
-        item.prices.forEach((j) => {
-          if (j.currency === `${state.currency}`) {
-            total = total + j.amount * item.count;
-          }
-          return (state.grandTotal = total);
-        });
-      });
+      updateAmount(state);
     },
     toggleAmount(state, action) {
       const { products, value } = action.payload;
@@ -148,15 +113,7 @@ export const cartSlice = createSlice({
         }
         return cart;
       });
-      let total = 0;
-      state.carts.forEach((item) => {
-        item.prices.forEach((j) => {
-          if (j.currency === `${state.currency}`) {
-            total = total + j.amount * item.count;
-          }
-          return (state.grandTotal = total);
-        });
-      });
+      updateAmount(state);
     },
     toggleImage(state, action) {
       const { products, value } = action.payload;
@@ -180,15 +137,7 @@ export const cartSlice = createSlice({
       let cart = state.carts.slice();
       const temp = cart.filter((x, index) => index !== product);
       state.carts = temp;
-      let total = 0;
-      state.carts.forEach((item) => {
-        item.prices.forEach((j) => {
-          if (j.currency === `${state.currency}`) {
-            total = total + j.amount * item.count;
-          }
-          return (state.grandTotal = total);
-        });
-      });
+      updateAmount(state);
       if (!state.carts.length) {
         return void { ...(state.grandTotal = 0) };
       }
@@ -230,6 +179,17 @@ export const cartSlice = createSlice({
     },
   },
 });
+const updateAmount = (state) => {
+  let total = 0;
+  state.carts.forEach((item) => {
+    item.prices.forEach((j) => {
+      if (j.currency === `${state.currency}`) {
+        total = total + j.amount * item.count;
+      }
+      return (state.grandTotal = total);
+    });
+  });
+};
 export const AddAttributes = (pr_id, att_id, att_value, att_type) => {
   return (dispatch) => {
     dispatch(

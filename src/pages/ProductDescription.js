@@ -4,13 +4,24 @@ import styled from "styled-components";
 import Prices from "../components/Prices";
 import Size from "../components/Size";
 import { addToCart } from "../slice/cartSlice";
-import { switchImages } from "../slice/fetchSlice";
 class ProductDescription extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      image:0,
+    };
+  }
+  handler = (id) => {
+    this.setState({
+      image: id,
+    });
+  };
   render() {
     const { name, id, gallery, description, prices, attributes } =
       this.props.state.productDescription;
     let regex = /(<([^>]+)>)/gi;
     let result = description.replace(regex, "");
+    
     return (
       <ProductMain key={id}>
         <ProductLeft>
@@ -20,12 +31,12 @@ class ProductDescription extends Component {
                 src={gallery}
                 alt=""
                 key={gallery}
-                onClick={() => this.props.switchImages(index)}
+                onClick={() => this.handler(index)}
               />
             ))}
           </LeftImage>
           <RightImage>
-            <img src={gallery[`${this.props.state.switchImage}`]} alt="" />
+            <img src={gallery[`${this.state.image}`]} alt="" />
           </RightImage>
         </ProductLeft>
         <ProductRight>
@@ -161,7 +172,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    switchImages: (index) => dispatch(switchImages(index)),
     cart: (product, id, prices) => dispatch(addToCart(product, id, prices)),
   };
 };
