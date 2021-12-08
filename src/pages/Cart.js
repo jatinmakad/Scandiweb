@@ -2,138 +2,87 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Plus from "../Images/plus-square.svg";
 import Minus from "../Images/minus-square.svg";
-import Right_icon from "../Images/chevron-right.svg";
-import Left from "../Images/left.svg";
 import styled from "styled-components";
-import {
-  removeAmountFunc,
-  toggleAmountFunc,
-  toggleImageFunc,
-} from "../slice/cartSlice";
+import { removeAmountFunc, toggleAmountFunc } from "../slice/cartSlice";
 import Prices from "../components/Prices";
 import { currencyFormatter } from "../helper/helper";
-
+import Link from "../helper/Link";
+import CartAttributes from "../components/CartAttributes";
+import CartImage from "../components/CartImage";
 class Cart extends Component {
   render() {
     return (
       <CartMain>
-        <CartHeading>Cart</CartHeading>
-        <div>
-          {this.props.cart.carts.map((g, index) => (
-            <CartHead key={g.id}>
-              <CartLeft>
-                <CartName key={g.name}>{g.name}</CartName>
-                <CartAttributes key={g.attribut}>
-                  <AttributeOuter>
-                    {g.attributes.map((s) => (
-                      <>
-                        <AttributeName key={s.att_id}>{s.att_id}</AttributeName>
-                        <Attribute key={s.att_value}
-                          style={{
-                            background:
-                              s.att_type === "swatch"
-                                ? s.att_value
-                                : "transparent",
-                            color:
-                              s.att_type === "swatch" ? s.att_value : "black",
-                          }}
-                        >
-                          {s.att_value}
-                        </Attribute>
-                      </>
-                    ))}
-                  </AttributeOuter>
-                </CartAttributes>
-                <CartPriceSection>
-                  {g.prices.map((s) => (
-                    <Prices price={s} key={s} />
-                  ))}
-                </CartPriceSection>
-              </CartLeft>
-
-              <CartRight>
-                <CartCount>
-                  <img
-                    src={Plus}
-                    alt=""
-                    onClick={() => this.props.toogleCount(index, "increase")}
-                  />
-                  <p style={{ fontSize: "20px" }}>{g.count}</p>
-                  <img
-                    src={Minus}
-                    alt=""
-                    onClick={
-                      g.count <= 1
-                        ? () => this.props.remove(index)
-                        : () => this.props.toogleCount(index, "decrease")
-                    }
-                  />
-                </CartCount>
-                <CartImage>
-                  <img
-                    src={Left}
-                    alt=""
-                    style={{
-                      position: "absolute",
-                      top: "43%",
-                      left: "0",
-                    }}
-                    onClick={() => this.props.toogleImage(index, "decrease")}
-                  />
-                  {g.gallery[`${g.co}`] ? (
-                    <img
-                      src={g.gallery[`${g.co}`]}
-                      alt=""
-                      style={{
-                        width: "140px",
-                        height: "200px",
-                        objectFit: "contain",
-                        marginBottom: "15px",
-                      }}
-                    />
+        {this.props.cart.carts.length === 0 ? (
+          <EmptyCart>
+            <p>Your Cart is Empty</p>
+            <Link href="/">
+              <AddProduct>Add Product</AddProduct>
+            </Link>
+          </EmptyCart>
+        ) : (
+          <>
+            <CartHeading>Cart</CartHeading>
+            <div>
+              {this.props.cart.carts.map((g, index) => (
+                <CartHead key={index}>
+                  <CartLeft>
+                    <CartName key={g.name}>{g.name}</CartName>
+                    <CartAttribute key={g.attribut}>
+                      <AttributeOuter key={g.attributes}>
+                        <CartAttributes data={g.attributes} />
+                      </AttributeOuter>
+                    </CartAttribute>
+                    <CartPriceSection>
+                      {g.prices.map((s, index) => (
+                        <Prices price={s} key={index} />
+                      ))}
+                    </CartPriceSection>
+                  </CartLeft>
+                  <CartRight>
+                    <CartCount>
+                      <img
+                        src={Plus}
+                        alt=""
+                        onClick={() =>
+                          this.props.toogleCount(index, "increase")
+                        }
+                      />
+                      <p style={{ fontSize: "20px" }} key={g.count}>
+                        {g.count}
+                      </p>
+                      <img
+                        src={Minus}
+                        alt=""
+                        onClick={
+                          g.count <= 1
+                            ? () => this.props.remove(index)
+                            : () => this.props.toogleCount(index, "decrease")
+                        }
+                      />
+                    </CartCount>
+                    <CartImage data={g.gallery} count={g.co} value={index} />
+                  </CartRight>
+                </CartHead>
+              ))}
+              <CartTotal>
+                <div>
+                  {this.props.cart.carts.length === 0 ? (
+                    ""
                   ) : (
-                    <img
-                      src={g.gallery[0]}
-                      alt=""
-                      style={{
-                        width: "140px",
-                        height: "200px",
-                        objectFit: "contain",
-                        marginBottom: "15px",
-                      }}
-                    />
+                    <p style={{ fontWeight: "600" }}>Total</p>
                   )}
-
-                  <img
-                    src={Right_icon}
-                    alt=""
-                    style={{
-                      position: "absolute",
-                      top: "43%",
-                      left: "80%",
-                    }}
-                    onClick={() => this.props.toogleImage(index, "increase")}
-                  />
-                </CartImage>
-              </CartRight>
-            </CartHead>
-          ))}
-          <CartTotal>
-            <div>
-              {this.props.cart.carts.length === 0 ? (
-                ""
-              ) : (
-                <p style={{ fontWeight: "600" }}>Total</p>
-              )}
+                </div>
+                <div key={this.props.cart.grandTotal}>
+                  {currencyFormatter(
+                    this.props.cart.currency,
+                    this.props.cart.grandTotal
+                  )}
+                </div>
+              </CartTotal>
             </div>
-            <div>
-              {currencyFormatter(
-                this.props.cart.currency,
-                this.props.cart.grandTotal
-              )}
-            </div>
-          </CartTotal>
-        </div>
+          </>
+        )}
       </CartMain>
     );
   }
@@ -161,14 +110,33 @@ const CartHead = styled.div`
   margin-bottom: 20px;
   border-bottom: 1px solid black;
 `;
+const EmptyCart = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 200px;
+  p {
+    font-size: 30px;
+    line-height: 40px;
+    margin-bottom: 30px;
+  }
+`;
 const CartLeft = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const AttributeName = styled.p``;
-const Attribute = styled.button`
-  padding: 5px;
-  border: 1px solid black;
+const AddProduct = styled.button`
+  width: 200px;
+  height: 43px;
+  padding: 13px 32px;
+  text-transform: uppercase;
+  background-color: transparent;
+  border: 1.6px solid black;
+  font-weight: 600;
+  line-height: 17px;
+  cursor: pointer;
 `;
 const CartName = styled.p`
   font-size: 30px;
@@ -176,7 +144,7 @@ const CartName = styled.p`
   line-height: 1px;
   margin-bottom: 25px;
 `;
-const CartAttributes = styled.div`
+const CartAttribute = styled.div`
   margin-bottom: 30px;
 `;
 const CartPriceSection = styled.div`
@@ -189,15 +157,13 @@ const CartRight = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
 const CartCount = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-right: 20px;
   line-height: 70px;
-`;
-const CartImage = styled.div`
-  position: relative;
 `;
 const AttributeOuter = styled.div`
   line-height: 30px;
@@ -223,7 +189,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     toogleCount: (index, value) => dispatch(toggleAmountFunc(index, value)),
     remove: (index) => dispatch(removeAmountFunc(index)),
-    toogleImage: (index, value) => dispatch(toggleImageFunc(index, value)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Cart);

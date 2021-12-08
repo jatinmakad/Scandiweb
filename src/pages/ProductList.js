@@ -10,12 +10,14 @@ import { addCart } from "../slice/cartSlice";
 
 class PrdouctsList extends Component {
   render() {
-    const { name, inStock, gallery, prices } =
-      this.props.products;
+    const { name, inStock, gallery, prices, id } = this.props.products;
     return (
-      <div className={!inStock === true ? "outofstock" : ""} key={name}>
-        <ProductMain onClick={() => this.props.single(this.props.products)}>
-          <div className={inStock === true ? "" : "jat"}>
+      <div className={!inStock === true ? "outofstock" : ""} key={id}>
+        <ProductMain
+          onClick={() => this.props.single(this.props.products)}
+          key={this.props.products}
+        >
+          <div className={inStock === true ? "" : "outStock"} key={inStock}>
             <OutofProduct
               style={{
                 display: inStock === true ? "none" : "block",
@@ -32,15 +34,15 @@ class PrdouctsList extends Component {
             href="/product/id"
             style={{ textDecoration: "none", color: "black" }}
           >
-            <Wrapper>
+            <Wrapper key={gallery[0]}>
               <img src={gallery[0]} alt="" />
             </Wrapper>
           </Link>
           <WrapperContent>
-            <h1 >{name}</h1>
-            <div >
-              {prices.map((s) => (
-                <Prices price={s} key={s.id} />
+            <h1 key={name}>{name}</h1>
+            <div key={prices}>
+              {prices.map((s, index) => (
+                <Prices price={s} key={index} />
               ))}
             </div>
           </WrapperContent>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { connect } from "react-redux";
 import { emptyAttributes } from "../slice/cartSlice";
 class Routes extends Component {

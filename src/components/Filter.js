@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Arrow from "../Images/arrow.svg";
 import styled from "styled-components";
-import { toggleDropdownClose, toggleDropdown } from "../slice/fetchSlice";
+import { toggleDropdownClose, toggleDropdownOpen } from "../slice/fetchSlice";
 import { connect } from "react-redux";
 import { filterCurrency } from "../slice/cartSlice";
 import OutsideClick from "../helper/OutsideClick";
@@ -9,35 +9,41 @@ import OutsideClick from "../helper/OutsideClick";
 class Filter extends Component {
   render() {
     return (
-      <Dropdown>
-        <DropdownBtn onClick={() => this.props.toogle()}>
-          {this.props.cart.currency}
-          <span style={{ paddingLeft: "7px" }}></span>
-          {this.props.state.isDropdwonOpen ? (
-            <img src={Arrow} alt="" />
-          ) : (
-            <img
-              src={Arrow}
-              alt=""
-              style={{
-                transform: "rotate(180deg)",
-              }}
-            />
-          )}
-        </DropdownBtn>
+      <OutsideClick filterClose={this.props.ModalClose}>
+        <Dropdown>
+          <DropdownBtn
+            onClick={() => {
+              this.props.state.isDropdwonOpen === false
+                ? this.props.ModalOpen()
+                : this.props.ModalClose();
+            }}
+          >
+            {this.props.cart.currency}
+            <span style={{ paddingLeft: "7px" }}></span>
+            {this.props.state.isDropdwonOpen ? (
+              <img src={Arrow} alt="" />
+            ) : (
+              <img
+                src={Arrow}
+                alt=""
+                style={{
+                  transform: "rotate(180deg)",
+                }}
+              />
+            )}
+          </DropdownBtn>
 
-        {this.props.state.isDropdwonOpen && (
-          <OutsideClick filterClose={this.props.toogle}>
+          {this.props.state.isDropdwonOpen && (
             <DropdownContent>
               {this.props.state.currencies.map((g) => (
                 <DropdownItem onClick={() => this.props.filter(g)} key={g}>
-                  <p onClick={() => this.props.toogleClose()}>{g}</p>
+                  <p onClick={() => this.props.ModalClose()}>{g}</p>
                 </DropdownItem>
               ))}
             </DropdownContent>
-          </OutsideClick>
-        )}
-      </Dropdown>
+          )}
+        </Dropdown>
+      </OutsideClick>
     );
   }
 }
@@ -88,8 +94,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    toogle: () => dispatch(toggleDropdown()),
-    toogleClose: () => dispatch(toggleDropdownClose()),
+    ModalOpen: () => dispatch(toggleDropdownOpen()),
+    ModalClose: () => dispatch(toggleDropdownClose()),
     filter: (g) => dispatch(filterCurrency(g)),
   };
 };

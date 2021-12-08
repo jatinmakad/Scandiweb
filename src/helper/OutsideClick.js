@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-/**
- * Component that alerts if you click outside of it
- */
-export default class OutsideClick extends Component {
+class OutsideClick extends Component {
   constructor(props) {
     super(props);
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
-  setHidden = () => {
-    document.body.style.overflow = "scroll";
-  };
-
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
   }
@@ -22,16 +16,10 @@ export default class OutsideClick extends Component {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
-  /**
-   * Set the wrapper ref
-   */
   setWrapperRef(node) {
     this.wrapperRef = node;
   }
 
-  /**
-   * Alert if clicked on outside of element
-   */
   handleClickOutside(event) {
     if (
       this.wrapperRef &&
@@ -39,14 +27,18 @@ export default class OutsideClick extends Component {
       window.scrollY < 200
     ) {
       this.props.filterClose();
-      this.setHidden();
     }
   }
   render() {
     return <div ref={this.setWrapperRef}>{this.props.children}</div>;
   }
 }
-
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart,
+  };
+};
 OutsideClick.propTypes = {
   children: PropTypes.element.isRequired,
 };
+export default connect(mapStateToProps)(OutsideClick);

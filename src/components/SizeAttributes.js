@@ -2,28 +2,61 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { AddAttributes } from "../slice/cartSlice";
-
 class SizeAttributes extends Component {
   render() {
     const { value, displayValue } = this.props.item;
     return (
       <Wrapper
         style={{
-          background: this.props.type === "swatch" ? value : "",
+          cursor: "pointer",
+          background:
+            this.props.type === "swatch"
+              ? this.props.cart.attributes[0]?.att_value === displayValue &&
+                this.props.cart.attributes[0]?.att_id === this.props.newId
+                ? "black"
+                : this.props.cart.attributes[1]?.att_value === displayValue &&
+                  this.props.cart.attributes[1]?.att_id === this.props.newId
+                ? "black"
+                : this.props.cart.attributes[2]?.att_value === displayValue &&
+                  this.props.cart.attributes[2]?.att_id === this.props.newId
+                ? "black"
+                : value
+              : this.props.type === "text"
+              ? this.props.cart.attributes[0]?.att_value === displayValue &&
+                this.props.cart.attributes[0]?.att_id === this.props.newId
+                ? "black"
+                : this.props.cart.attributes[1]?.att_value === displayValue &&
+                  this.props.cart.attributes[1]?.att_id === this.props.newId
+                ? "black"
+                : this.props.cart.attributes[2]?.att_value === displayValue &&
+                  this.props.cart.attributes[2]?.att_id === this.props.newId
+                ? "black"
+                : "#fff"
+              : "",
           color:
             this.props.type === "swatch"
-              ? value
-              : "black" &&
-                this.props.cart.attributes[0]?.att_value === displayValue &&
+              ? this.props.cart.attributes[0]?.att_value === displayValue &&
                 this.props.cart.attributes[0]?.att_id === this.props.newId
-              ? "red"
-              : this.props.cart.attributes[1]?.att_value === displayValue &&
-                this.props.cart.attributes[1]?.att_id === this.props.newId
-              ? "red"
-              : this.props.cart.attributes[2]?.att_value === displayValue &&
-                this.props.cart.attributes[2]?.att_id === this.props.newId
-              ? "red"
-              : "black",
+                ? "black"
+                : this.props.cart.attributes[1]?.att_value === displayValue &&
+                  this.props.cart.attributes[1]?.att_id === this.props.newId
+                ? "black"
+                : this.props.cart.attributes[2]?.att_value === displayValue &&
+                  this.props.cart.attributes[2]?.att_id === this.props.newId
+                ? "black"
+                : value
+              : this.props.type === "text"
+              ? this.props.cart.attributes[0]?.att_value === displayValue &&
+                this.props.cart.attributes[0]?.att_id === this.props.newId
+                ? "#fff"
+                : this.props.cart.attributes[1]?.att_value === displayValue &&
+                  this.props.cart.attributes[1]?.att_id === this.props.newId
+                ? "#fff"
+                : this.props.cart.attributes[2]?.att_value === displayValue &&
+                  this.props.cart.attributes[2]?.att_id === this.props.newId
+                ? "#fff"
+                : "black"
+              : "",
         }}
         onClick={() =>
           this.props.attributes(
@@ -33,6 +66,7 @@ class SizeAttributes extends Component {
             this.props.type
           )
         }
+        key={value}
       >
         {value}
       </Wrapper>

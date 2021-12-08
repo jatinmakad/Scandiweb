@@ -5,72 +5,45 @@ import "../styles/Header.css";
 import Logo from "../Images/main_logo.svg";
 import Cart from "../Images/Empty Cart.svg";
 import Filter from "../components/Filter";
-import { filteredProduct } from "../slice/fetchSlice";
-import { toggleCart, toggleCartClose } from "../slice/cartSlice";
+import {
+  toggleCart,
+  toggleCartClose,
+  toggleCartOpen,
+} from "../slice/cartSlice";
 import Overlay from "./Overlay";
 import Link from "../helper/Link";
+import HeaderList from "../components/HeaderList";
 class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      category: "all",
-    };
-  }
-  handler = (id) => {
-    this.setState({
-      category: id,
-    });
-  };
-  setHidden = () => {
-    document.body.style.overflow = "hidden";
-  };
   render() {
     return (
       <HeaderMain>
         <HeaderInner>
-          <HeaderList>
-            <li
-              onClick={() => {
-                this.props.category("all");
-                this.handler("all");
-              }}
-              className={this.state.category === "all" ? "active" : ""}
-            >
-              All
-            </li>
-            <li
-              onClick={() => {
-                this.props.category("clothes");
-                this.handler("clothes");
-              }}
-              className={this.state.category === "clothes" ? "active" : ""}
-            >
-              Clothes
-            </li>
-            <li
-              onClick={() => {
-                this.props.category("tech");
-                this.handler("tech");
-              }}
-              className={this.state.category === "tech" ? "active" : ""}
-            >
-              Tech
-            </li>
-          </HeaderList>
+          <HeaderList />
           <Link href="/">
             <img src={Logo} alt="" />
           </Link>
           <HeaderLastMain>
             <Filter />
-            <HeaderCart
-              onClick={() => {
-                this.props.toogle();
-                this.setHidden();
+            <div
+              style={{
+                pointerEvents:
+                  this.props.cart.carts.length === 0 ? "none" : "fill",
+                cursor:
+                  this.props.cart.carts.length === 0
+                    ? "not-allowed"
+                    : "pointer",
               }}
             >
-              <img src={Cart} alt="" />
-              <p>{this.props.cart.carts.length}</p>
-            </HeaderCart>
+              <HeaderCart
+                onClick={() => {
+                  this.props.toogle();
+                }}
+              >
+                <img src={Cart} alt="" />
+                <p>{this.props.cart.carts.length}</p>
+              </HeaderCart>
+            </div>
+
             <Overlay
               open={this.props.cart.isCartOpen}
               length={this.props.cart.carts.length}
@@ -89,9 +62,9 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    category: (id) => dispatch(filteredProduct(id)),
     toogle: () => dispatch(toggleCart()),
     toogleCartClose: () => dispatch(toggleCartClose()),
+    toogleCartOpen: () => dispatch(toggleCartOpen()),
   };
 };
 
@@ -109,25 +82,6 @@ const HeaderInner = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-`;
-const HeaderList = styled.ul`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 35%;
-  list-style: none;
-  li {
-    height: 100px;
-    cursor: pointer;
-    padding: 0 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 25px;
-    font-style: normal;
-    line-height: 19px;
-  }
 `;
 const HeaderLastMain = styled.div`
   display: flex;

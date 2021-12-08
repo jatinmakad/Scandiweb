@@ -4,12 +4,12 @@ import SizeAttributes from "./SizeAttributes";
 
 class Size extends Component {
   render() {
-    const { id, items,type } = this.props.size;
+    const { id, items,type,index } = this.props.size;
     return (
-      <Wrapper>
-        <WrapperInner>{id}</WrapperInner>
-        {items.map((s) => (
-          <SizeAttributes item={s} type={type} productId={this.props.productId} newId={id} id={this.props.id} />
+      <Wrapper key={index}>
+        <WrapperInner key={id}>{id}</WrapperInner>
+        {items.map((s,index) => (
+          <SizeAttributes item={s} key={index} type={type} productId={this.props.productId} newId={id} id={this.props.id} />
         ))}
       </Wrapper>
     );

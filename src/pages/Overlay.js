@@ -16,9 +16,6 @@ import { currencyFormatter } from "../helper/helper";
 import OutsideClick from "../helper/OutsideClick";
 import Link from "../helper/Link";
 class Overlay extends Component {
-  setHidden = () => {
-    document.body.style.overflow = "scroll";
-  };
 
   render() {
     const { open, length } = this.props;
@@ -47,8 +44,9 @@ class Overlay extends Component {
             maxHeight: "540px",
             overflowY: "auto",
           }}
+
         >
-          <OutsideClick filterClose={this.props.toogle}>
+          <OutsideClick filterClose={this.props.toogleClose}>
             <div>
               <MyBag>
                 My Bag,
@@ -56,102 +54,121 @@ class Overlay extends Component {
                   style={{
                     fontWeight: "300",
                   }}
+                  key={length}
                 >
                   {length} items
                 </span>
               </MyBag>
-              <div>
-                {this.props.cart.carts.map((g, index) => (
-                  <OverlayCart>
-                    <OverlayCartFirst>
-                      <OverlayCartName key={g.name}>{g.name}</OverlayCartName>
-                      <AttributesOuter>
-                        {g.attributes.map((s) => (
-                          <>
-                            <AttributesName key={s.att_id}>
-                              {s.att_id} :
-                            </AttributesName>
-                            <Attributes
+              {length === 0 ? (
+                <EmptyCart>Your cart is Empty</EmptyCart>
+              ) : (
+                <>
+                  <div>
+                    {this.props.cart.carts.map((g, index) => (
+                      <OverlayCart key={index}>
+                        <OverlayCartFirst>
+                          <OverlayCartName key={g.name}>
+                            {g.name}
+                          </OverlayCartName>
+                          <AttributesOuter>
+                            {g.attributes.map((s, index) => (
+                              <div key={index}>
+                                <AttributesName key={s.att_id}>
+                                  {s.att_id} :
+                                </AttributesName>
+                                <Attributes
+                                  style={{
+                                    background:
+                                      s.att_type === "swatch"
+                                        ? s.att_value
+                                        : "transparent",
+                                    color:
+                                      s.att_type === "swatch"
+                                        ? s.att_value
+                                        : "black",
+                                  }}
+                                  key={s.att_value}
+                                >
+                                  {s.att_value}
+                                </Attributes>
+                              </div>
+                            ))}
+                          </AttributesOuter>
+                          <OverlayCurrency>
+                            {g.prices.map((s, index) => (
+                              <Prices price={s} key={index} />
+                            ))}
+                          </OverlayCurrency>
+                        </OverlayCartFirst>
+                        <OverlayCountButton>
+                          <OverlayCount>
+                            <img
+                              src={Plus}
+                              alt=""
+                              onClick={() =>
+                                this.props.amount(index, "increase")
+                              }
                               style={{
-                                background:
-                                  s.att_type === "swatch"
-                                    ? s.att_value
-                                    : "transparent",
-                                color:
-                                  s.att_type === "swatch"
-                                    ? s.att_value
-                                    : "black",
+                                width: "25px",
+                                height: "25px",
                               }}
-                              key={s.att_value}
-                            >
-                              {s.att_value}
-                            </Attributes>
-                          </>
-                        ))}
-                      </AttributesOuter>
-                      <OverlayCurrency>
-                        {g.prices.map((s) => (
-                          <Prices price={s} />
-                        ))}
-                      </OverlayCurrency>
-                    </OverlayCartFirst>
-                    <OverlayCountButton>
-                      <OverlayCount>
-                        <img
-                          src={Plus}
-                          alt=""
-                          onClick={() => this.props.amount(index, "increase")}
-                          style={{
-                            width: "25px",
-                            height: "25px",
-                          }}
-                        />
-                        <p>{g.count}</p>
-                        <img
-                          src={Minus}
-                          alt=""
-                          style={{
-                            width: "25px",
-                            height: "25px",
-                          }}
-                          onClick={
-                            g.count <= 1
-                              ? () => this.props.remove(index)
-                              : () => this.props.amount(index, "decrease")
-                          }
-                        />
-                      </OverlayCount>
-                      <OverlayPrImage src={g?.gallery[0]}></OverlayPrImage>
-                    </OverlayCountButton>
-                  </OverlayCart>
-                ))}
-              </div>
-              <OverlayPrTotal>
-                <div
+                            />
+                            <p key={g.count}>{g.count}</p>
+                            <img
+                              src={Minus}
+                              alt=""
+                              style={{
+                                width: "25px",
+                                height: "25px",
+                              }}
+                              onClick={
+                                g.count <= 1
+                                  ? () => this.props.remove(index)
+                                  : () => this.props.amount(index, "decrease")
+                              }
+                            />
+                          </OverlayCount>
+                          <OverlayPrImage src={g?.gallery[0]}></OverlayPrImage>
+                        </OverlayCountButton>
+                      </OverlayCart>
+                    ))}
+                  </div>
+                  <OverlayPrTotal>
+                    <div
+                      style={{
+                        fontWeight: "600",
+                      }}
+                    >
+                      Total
+                    </div>
+                    <p key={this.props.cart.grandTotal}>
+                      {currencyFormatter(
+                        this.props.cart.currency,
+                        this.props.cart.grandTotal
+                      )}
+                    </p>
+                  </OverlayPrTotal>
+                </>
+              )}
+              <OverlayBag>
+                <OverlayBagButton
                   style={{
-                    fontWeight: "600",
+                    pointerEvents:
+                      this.props.cart.carts.length === 0 ? "none" : "fill",
+                    cursor:
+                      this.props.cart.carts.length === 0 ? "not-allowed" : "",
                   }}
                 >
-                  Total
-                </div>
-                <p>
-                  {currencyFormatter(
-                    this.props.cart.currency,
-                    this.props.cart.grandTotal
-                  )}
-                </p>
-              </OverlayPrTotal>
-              <OverlayBag>
-                <Link href="/cart">
-                  <OverlayBagButton
-                    onClick={() => {
-                      this.props.toogleClose();
-                      this.setHidden();
-                    }}
-                  >
-                    View Bag
-                  </OverlayBagButton>
-                </Link>
+                  <Link href="/cart">
+                    <span
+                      onClick={() => {
+                        this.props.toogleClose()
+                      }}
+                    >
+                      View Bag
+                    </span>
+                  </Link>
+                </OverlayBagButton>
                 <OverlayBagButton2>Check Out</OverlayBagButton2>
               </OverlayBag>
             </div>
@@ -192,6 +209,13 @@ const Attributes = styled.button`
 
 const AttributesOuter = styled.div`
   line-height: 30px;
+`;
+const EmptyCart = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  margin-bottom: 40px;
 `;
 const AttributesName = styled.p``;
 const MyBag = styled.div`
@@ -266,6 +290,7 @@ const OverlayBagButton2 = styled.button`
   width: 140px;
   height: 43px;
   padding: 10px 25px;
+  cursor: pointer;
   text-transform: uppercase;
   background-color: #5ece7b;
   border: none;

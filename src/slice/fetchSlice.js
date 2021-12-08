@@ -37,9 +37,9 @@ export const productSlice = createSlice({
     product: [],
     currencies: [],
     isDropdwonOpen: false,
-    productDescription:{},
-    productCategory:"all",
-    switchImage:0,
+    productDescription: {},
+    productCategory: "all",
+    switchImage: 0,
   },
   reducers: {
     updateList(state, action) {
@@ -48,21 +48,21 @@ export const productSlice = createSlice({
     updateCurrency(state, action) {
       state.currencies = action.payload;
     },
-    toggleDropdown(state, action) {
-      return { ...state, isDropdwonOpen: !state.isDropdwonOpen};
+    toggleDropdownOpen(state, action) {
+      return { ...state, isDropdwonOpen: true };
     },
     toggleDropdownClose(state, action) {
-      return { ...state, isDropdwonOpen:false };
+      return { ...state, isDropdwonOpen: false };
     },
-    productSingle(state,action) {
-       state.productDescription = action.payload
+    productSingle(state, action) {
+      state.productDescription = action.payload;
     },
-    filteredProduct(state,action){
-      state.productCategory = action.payload
+    filteredProduct(state, action) {
+      state.productCategory = action.payload;
     },
-    switchImages(state,action){
-      state.switchImage = action.payload
-    }
+    switchImages(state, action) {
+      state.switchImage = action.payload;
+    },
   },
 });
 export const fetchProduct = () => {
@@ -73,4 +73,11 @@ export const fetchProduct = () => {
     });
   };
 };
-export const {toggleDropdown,toggleDropdownClose,filterCurrency,productSingle,filteredProduct,switchImages } = productSlice.actions;
+export const {
+  toggleDropdownClose,
+  toggleDropdownOpen,
+  filterCurrency,
+  productSingle,
+  filteredProduct,
+  switchImages,
+} = productSlice.actions;

@@ -5,12 +5,18 @@ import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import ProductDescription from "./pages/ProductDescription";
 import Route from "./helper/Routes";
-import { fetchProduct } from "./slice/fetchSlice";
+import { fetchProduct, toggleDropdownClose } from "./slice/fetchSlice";
+import { toggleCartClose } from "./slice/cartSlice";
 
 class App extends Component {
   componentDidMount() {
     this.props.fetch();
+    if (performance.navigation.type === 1) {
+      this.props.dropdownClose();
+      this.props.cartClose();
+    }
   }
+
   render() {
     return (
       <React.Fragment>
@@ -36,6 +42,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetch: () => dispatch(fetchProduct()),
+    dropdownClose: () => dispatch(toggleDropdownClose()),
+    cartClose: () => dispatch(toggleCartClose()),
   };
 };
 

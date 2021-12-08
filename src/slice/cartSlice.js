@@ -12,10 +12,15 @@ export const cartSlice = createSlice({
   },
   reducers: {
     toggleCart(state, action) {
+      document.body.style.overflow = "hidden";
       return { ...state, isCartOpen: !state.isCartOpen };
     },
     toggleCartClose(state, action) {
+      document.body.style.overflow = "scroll";
       return { ...state, isCartOpen: false };
+    },
+    toggleCartOpen(state, action) {
+      return { ...state, isCartOpen: true };
     },
     filterCurrency(state, action) {
       state.currency = action.payload;
@@ -64,8 +69,8 @@ export const cartSlice = createSlice({
         }
         cart.forEach((item) => {
           items.every((z) => {
-            item.attributes.filter((s) => {
-              if (_.isEqual(z, s)) {
+          item.attributes.filter((s) => {
+           if (_.isEqual(z, s)) {
                 alreadyInCart = true;
                 item.count++;
                 state.attributes = [];
@@ -255,6 +260,7 @@ export const {
   toggleCart,
   filterCurrency,
   increment,
+  toggleCartOpen,
   decrement,
   toggleCartClose,
   ProductImageDec,

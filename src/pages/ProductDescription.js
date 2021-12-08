@@ -12,13 +12,14 @@ class ProductDescription extends Component {
     let regex = /(<([^>]+)>)/gi;
     let result = description.replace(regex, "");
     return (
-      <ProductMain>
+      <ProductMain key={id}>
         <ProductLeft>
           <LeftImage>
             {gallery.map((gallery, index) => (
               <img
                 src={gallery}
                 alt=""
+                key={gallery}
                 onClick={() => this.props.switchImages(index)}
               />
             ))}
@@ -28,34 +29,43 @@ class ProductDescription extends Component {
           </RightImage>
         </ProductLeft>
         <ProductRight>
-          <h1>{name}</h1>
+          <h1 key={name}>{name}</h1>
           <ProductSize>
-            <div>
-              {attributes.map((s) => (
-                <Size size={s} productId={id} id={s.id} />
+            <div key={attributes}>
+              {attributes.map((s, index) => (
+                <Size
+                  size={s}
+                  key={index}
+                  index={index}
+                  productId={id}
+                  id={s.id}
+                />
               ))}
             </div>
           </ProductSize>
           <ProductPrice>
             <h3>Price</h3>
             <div>
-              {prices.map((s) => (
-                <Prices price={s}  />
+              {prices.map((s, index) => (
+                <Prices price={s} key={index} />
               ))}
             </div>
           </ProductPrice>
           <AddCart
-        //  style={{
-        //   pointerEvents: !this.props.cart.attributes?.length ? "none" : "",
-        //   cursor: !this.props.cart.attributes?.length ? "not-allowed" : "pointer",
-        // }}
+            style={{
+              pointerEvents:
+                this.props.carts.attributes.length === 0 ? "none" : "fill",
+              cursor:
+                this.props.carts.attributes.length === 0
+                  ? "not-allowed"
+                  : "pointer",
+            }}
           >
             <span
               onClick={() =>
                 this.props.cart(this.props.state.productDescription, id, prices)
               }
             >
-              {" "}
               Add To Cart
             </span>
           </AddCart>
@@ -146,7 +156,7 @@ const ProductDescriptions = styled.p`
 const mapStateToProps = (state) => {
   return {
     state: state.product,
-    cart:state.cart
+    carts: state.cart,
   };
 };
 const mapDispatchToProps = (dispatch) => {
