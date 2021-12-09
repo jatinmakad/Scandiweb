@@ -15,6 +15,10 @@ import Link from "../helper/Link";
 import HeaderList from "../components/HeaderList";
 class Header extends Component {
   render() {
+    const header_style = {
+      pointerEvents: this.props.cart.carts.length === 0 ? "none" : "fill",
+      cursor: this.props.cart.carts.length === 0 ? "not-allowed" : "pointer",
+    };
     return (
       <HeaderMain>
         <HeaderInner>
@@ -24,16 +28,7 @@ class Header extends Component {
           </Link>
           <HeaderLastMain>
             <Filter />
-            <div
-              style={{
-                pointerEvents:
-                  this.props.cart.carts.length === 0 ? "none" : "fill",
-                cursor:
-                  this.props.cart.carts.length === 0
-                    ? "not-allowed"
-                    : "pointer",
-              }}
-            >
+            <div style={header_style}>
               <HeaderCart
                 onClick={() => {
                   this.props.toogle();

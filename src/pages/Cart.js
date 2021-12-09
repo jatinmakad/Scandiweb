@@ -70,7 +70,7 @@ class Cart extends Component {
                   {this.props.cart.carts.length === 0 ? (
                     ""
                   ) : (
-                    <p style={{ fontWeight: "600" }}>Total</p>
+                    <CartTotalText>Total</CartTotalText>
                   )}
                 </div>
                 <div key={this.props.cart.grandTotal}>
@@ -109,6 +109,9 @@ const CartHead = styled.div`
   justify-content: space-between;
   margin-bottom: 20px;
   border-bottom: 1px solid black;
+`;
+const CartTotalText = styled.p`
+font-weight: 600;
 `;
 const EmptyCart = styled.div`
   display: flex;

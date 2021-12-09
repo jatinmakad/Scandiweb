@@ -16,36 +16,16 @@ import { currencyFormatter } from "../helper/helper";
 import OutsideClick from "../helper/OutsideClick";
 import Link from "../helper/Link";
 class Overlay extends Component {
-
   render() {
+    const viewBag = {
+      pointerEvents: this.props.cart.carts.length === 0 ? "none" : "fill",
+      cursor: this.props.cart.carts.length === 0 ? "not-allowed" : "",
+    };
     const { open, length } = this.props;
     if (!open) return null;
     return (
-      <div
-        style={{
-          position: "fixed",
-          top: "14%",
-          left: "0",
-          right: "0",
-          bottom: "0",
-          backgroundColor: "rgba(0,0,0,.8)",
-          zIndex: "1000",
-        }}
-      >
-        <Fade
-          style={{
-            position: "fixed",
-            top: "14%",
-            left: "74%",
-            backgroundColor: "#fff",
-            padding: "30px",
-            zIndex: "1000",
-            width: "325px",
-            maxHeight: "540px",
-            overflowY: "auto",
-          }}
-
-        >
+      <FadeOuter>
+        <Fade>
           <OutsideClick filterClose={this.props.toogleClose}>
             <div>
               <MyBag>
@@ -102,25 +82,17 @@ class Overlay extends Component {
                         </OverlayCartFirst>
                         <OverlayCountButton>
                           <OverlayCount>
-                            <img
+                            <OverlayCountImage
                               src={Plus}
                               alt=""
                               onClick={() =>
                                 this.props.amount(index, "increase")
                               }
-                              style={{
-                                width: "25px",
-                                height: "25px",
-                              }}
                             />
                             <p key={g.count}>{g.count}</p>
-                            <img
+                            <OverlayCountImage
                               src={Minus}
                               alt=""
-                              style={{
-                                width: "25px",
-                                height: "25px",
-                              }}
                               onClick={
                                 g.count <= 1
                                   ? () => this.props.remove(index)
@@ -134,13 +106,7 @@ class Overlay extends Component {
                     ))}
                   </div>
                   <OverlayPrTotal>
-                    <div
-                      style={{
-                        fontWeight: "600",
-                      }}
-                    >
-                      Total
-                    </div>
+                    <TotalText>Total</TotalText>
                     <p key={this.props.cart.grandTotal}>
                       {currencyFormatter(
                         this.props.cart.currency,
@@ -151,18 +117,11 @@ class Overlay extends Component {
                 </>
               )}
               <OverlayBag>
-                <OverlayBagButton
-                  style={{
-                    pointerEvents:
-                      this.props.cart.carts.length === 0 ? "none" : "fill",
-                    cursor:
-                      this.props.cart.carts.length === 0 ? "not-allowed" : "",
-                  }}
-                >
+                <OverlayBagButton style={viewBag}>
                   <Link href="/cart">
                     <span
                       onClick={() => {
-                        this.props.toogleClose()
+                        this.props.toogleClose();
                       }}
                     >
                       View Bag
@@ -174,7 +133,7 @@ class Overlay extends Component {
             </div>
           </OutsideClick>
         </Fade>
-      </div>
+      </FadeOuter>
     );
   }
 }
@@ -196,11 +155,36 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
+const FadeOuter = styled.div`
+  position: fixed;
+  top: 14%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.8);
+`;
+const OverlayCountImage = styled.img`
+  width: 25px;
+  height: 25px;
+`;
 const Fade = styled.div`
   &::-webkit-scrollbar {
     width: 1px;
     border: 1px solid black;
   }
+  position: fixed;
+  top: 14%;
+  left: 74%;
+  background-color: #fff;
+  padding: 30px;
+  z-index: 1000;
+  width: 325px;
+  max-height: 540px;
+  overflow-y: auto;
+`;
+const TotalText = styled.p`
+  font-weight: 600;
 `;
 const Attributes = styled.button`
   border: 1px solid black;

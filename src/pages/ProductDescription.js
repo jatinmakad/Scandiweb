@@ -8,7 +8,7 @@ class ProductDescription extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      image:0,
+      image: 0,
     };
   }
   handler = (id) => {
@@ -16,12 +16,18 @@ class ProductDescription extends Component {
       image: id,
     });
   };
+
   render() {
+    const addCart_style = {
+      pointerEvents: this.props.carts.attributes.length === 0 ? "none" : "fill",
+      cursor:
+        this.props.carts.attributes.length === 0 ? "not-allowed" : "pointer",
+    };
     const { name, id, gallery, description, prices, attributes } =
       this.props.state.productDescription;
     let regex = /(<([^>]+)>)/gi;
     let result = description.replace(regex, "");
-    
+
     return (
       <ProductMain key={id}>
         <ProductLeft>
@@ -62,16 +68,7 @@ class ProductDescription extends Component {
               ))}
             </div>
           </ProductPrice>
-          <AddCart
-            style={{
-              pointerEvents:
-                this.props.carts.attributes.length === 0 ? "none" : "fill",
-              cursor:
-                this.props.carts.attributes.length === 0
-                  ? "not-allowed"
-                  : "pointer",
-            }}
-          >
+          <AddCart style={addCart_style}>
             <span
               onClick={() =>
                 this.props.cart(this.props.state.productDescription, id, prices)

@@ -11,6 +11,11 @@ import { addCart } from "../slice/cartSlice";
 class PrdouctsList extends Component {
   render() {
     const { name, inStock, gallery, prices, id } = this.props.products;
+    const link_style = { textDecoration: "none", color: "black" };
+    const outofStock_style = {
+      display: inStock === true ? "none" : "block",
+    };
+
     return (
       <div className={!inStock === true ? "outofstock" : ""} key={id}>
         <ProductMain
@@ -18,22 +23,13 @@ class PrdouctsList extends Component {
           key={this.props.products}
         >
           <div className={inStock === true ? "" : "outStock"} key={inStock}>
-            <OutofProduct
-              style={{
-                display: inStock === true ? "none" : "block",
-              }}
-            >
-              out of stock
-            </OutofProduct>
+            <OutofProduct style={outofStock_style}>out of stock</OutofProduct>
           </div>
           <CartIcon
             src={Cart_Icon}
             onClick={() => this.props.cart(this.props.products)}
           />
-          <Link
-            href="/product/id"
-            style={{ textDecoration: "none", color: "black" }}
-          >
+          <Link href="/product/id" style={link_style}>
             <Wrapper key={gallery[0]}>
               <img src={gallery[0]} alt="" />
             </Wrapper>

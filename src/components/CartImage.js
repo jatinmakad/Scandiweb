@@ -8,48 +8,20 @@ class CartImage extends Component {
   render() {
     return (
       <CartImag>
-        <img
+        <CartImageLeft
           src={Left}
           alt=""
-          style={{
-            position: "absolute",
-            top: "43%",
-            left: "0",
-          }}
           onClick={() => this.props.toogleImage(this.props.value, "decrease")}
         />
         {this.props.data[`${this.props.count}`] ? (
-          <img
-            src={this.props.data[`${this.props.count}`]}
-            alt=""
-            style={{
-              width: "140px",
-              height: "200px",
-              objectFit: "contain",
-              marginBottom: "15px",
-            }}
-          />
+          <CartImageInner src={this.props.data[`${this.props.count}`]} alt="" />
         ) : (
-          <img
-            src={this.props.data[0]}
-            alt=""
-            style={{
-              width: "140px",
-              height: "200px",
-              objectFit: "contain",
-              marginBottom: "15px",
-            }}
-          />
+          <CartImageInner src={this.props.data[0]} alt="" />
         )}
 
-        <img
+        <CartImageRight
           src={Right_icon}
           alt=""
-          style={{
-            position: "absolute",
-            top: "43%",
-            left: "80%",
-          }}
           onClick={() => this.props.toogleImage(this.props.value, "increase")}
         />
       </CartImag>
@@ -58,6 +30,22 @@ class CartImage extends Component {
 }
 const CartImag = styled.div`
   position: relative;
+`;
+const CartImageLeft = styled.img`
+  position: absolute;
+  top: 43%;
+  left: 0;
+`;
+const CartImageRight = styled.img`
+  position: absolute;
+  top: 43%;
+  left: 80%;
+`;
+const CartImageInner = styled.img`
+  width: 140px;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 15px;
 `;
 const mapDispatchToProps = (dispatch) => {
   return {
