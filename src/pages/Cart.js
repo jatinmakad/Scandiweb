@@ -111,7 +111,7 @@ const CartHead = styled.div`
   border-bottom: 1px solid black;
 `;
 const CartTotalText = styled.p`
-font-weight: 600;
+  font-weight: 600;
 `;
 const EmptyCart = styled.div`
   display: flex;

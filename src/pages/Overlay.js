@@ -6,7 +6,6 @@ import {
   increment,
   removeAmountFunc,
   toggleAmountFunc,
-  toggleCart,
   toggleCartClose,
 } from "../slice/cartSlice";
 import Plus from "../Images/plus-square.svg";
@@ -88,6 +87,7 @@ class Overlay extends Component {
                               onClick={() =>
                                 this.props.amount(index, "increase")
                               }
+
                             />
                             <p key={g.count}>{g.count}</p>
                             <OverlayCountImage
@@ -146,7 +146,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    toogle: () => dispatch(toggleCart()),
     toogleClose: () => dispatch(toggleCartClose()),
     increment: (index) => dispatch(increment(index)),
     decrement: (index) => dispatch(decrement(index)),
