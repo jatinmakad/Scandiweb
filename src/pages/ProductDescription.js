@@ -23,8 +23,8 @@ class ProductDescription extends Component {
       cursor:
         this.props.carts.attributes.length === 0 ? "not-allowed" : "pointer",
     };
-    const { name, id, gallery, description, prices, attributes } =
-      this.props.state.productDescription;
+    const { name, id, gallery, description, prices, attributes, brand } =
+      this.props.state.productDescription.product;
     let regex = /(<([^>]+)>)/gi;
     let result = description.replace(regex, "");
 
@@ -46,7 +46,8 @@ class ProductDescription extends Component {
           </RightImage>
         </ProductLeft>
         <ProductRight>
-          <h1 key={name}>{name}</h1>
+          <ProductBrand key={brand}>{brand}</ProductBrand>
+          <ProductName key={name}>{name}</ProductName>
           <ProductSize>
             <div key={attributes}>
               {attributes.map((s, index) => (
@@ -113,10 +114,15 @@ const ProductRight = styled.div`
   padding: 50px;
   display: flex;
   flex-direction: column;
-  h1 {
-    margin-bottom: 70px;
-    font-size: 40px;
-  }
+`;
+const ProductName = styled.h2`
+  margin-bottom: 70px;
+  font-size: 40px;
+  font-weight: 500;
+`;
+const ProductBrand = styled.h1`
+  margin-bottom: 10px;
+  font-size: 34px;
 `;
 const ProductSize = styled.div`
   margin-bottom: 40px;

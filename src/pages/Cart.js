@@ -27,7 +27,10 @@ class Cart extends Component {
               {this.props.cart.carts.map((g, index) => (
                 <CartHead key={index}>
                   <CartLeft>
-                    <CartName key={g.name}>{g.name}</CartName>
+                    <CartNameOuter key={g.name}>
+                      <CartBrand>{g.brand}</CartBrand>
+                      <CartName> {g.name}</CartName>
+                    </CartNameOuter>
                     <CartAttribute key={g.attribut}>
                       <AttributeOuter key={g.attributes}>
                         <CartAttributes data={g.attributes} />
@@ -141,11 +144,15 @@ const AddProduct = styled.button`
   line-height: 17px;
   cursor: pointer;
 `;
-const CartName = styled.p`
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 1px;
-  margin-bottom: 25px;
+const CartName = styled.h1`
+  font-weight: normal;
+  font-size: 28px;
+`;
+const CartNameOuter = styled.div`
+  margin-bottom: 5px;
+`;
+const CartBrand = styled.h1`
+  font-size: 28px;
 `;
 const CartAttribute = styled.div`
   margin-bottom: 30px;

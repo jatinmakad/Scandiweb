@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import Prices from "../components/Prices";
-import { productSingle } from "../slice/fetchSlice";
+import { fetchSingleProduct } from "../slice/fetchSlice";
 import Cart_Icon from "../Images/Common.svg";
 import "../styles/Header.css";
 import Link from "../helper/Link";
@@ -19,7 +19,7 @@ class PrdouctsList extends Component {
     return (
       <div className={!inStock === true ? "outofstock" : ""} key={id}>
         <ProductMain
-          onClick={() => this.props.single(this.props.products)}
+          onClick={() => this.props.fetchSingle(id)}
           key={this.props.products}
         >
           <div className={inStock === true ? "" : "outStock"} key={inStock}>
@@ -111,8 +111,8 @@ const WrapperContent = styled.div`
 `;
 const mapDispatchToProps = (dispatch) => {
   return {
-    single: (product) => dispatch(productSingle(product)),
     cart: (product) => dispatch(addCart(product)),
+    fetchSingle : (id) => dispatch(fetchSingleProduct(id))
   };
 };
 export default connect(null, mapDispatchToProps)(PrdouctsList);

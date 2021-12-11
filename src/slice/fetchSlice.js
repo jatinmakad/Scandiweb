@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { gql } from "apollo-boost";
 import { request } from "graphql-request";
-
 const DATA_USER = gql`
   {
     category {
@@ -12,6 +11,7 @@ const DATA_USER = gql`
         gallery
         description
         category
+        brand
         prices {
           currency
           amount
@@ -73,11 +73,43 @@ export const fetchProduct = () => {
     });
   };
 };
+export const fetchSingleProduct = (id) => {
+  const Query = gql`
+  {
+    product(id:"${id}") {
+      id
+      name
+      gallery
+      description
+      brand
+      prices {
+        currency
+        amount
+      }
+      attributes {
+        id
+        name
+        type
+        items {
+          displayValue
+          value
+          id
+        }
+      }
+    }
+  }
+`;
+  return (dispatch) => {
+    request("http://localhost:4000/", Query).then((data) => {
+      dispatch(productSlice.actions.productSingle(data));
+    });
+  };
+};
+
 export const {
   toggleDropdownClose,
   toggleDropdownOpen,
   filterCurrency,
-  productSingle,
   filteredProduct,
   switchImages,
 } = productSlice.actions;

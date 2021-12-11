@@ -47,7 +47,8 @@ class Overlay extends Component {
                       <OverlayCart key={index}>
                         <OverlayCartFirst>
                           <OverlayCartName key={g.name}>
-                            {g.name}
+                            <ProductBrand>{g.brand}</ProductBrand>
+                            <ProductName>{g.name}</ProductName>
                           </OverlayCartName>
                           <AttributesOuter>
                             {g.attributes.map((s, index) => (
@@ -87,7 +88,6 @@ class Overlay extends Component {
                               onClick={() =>
                                 this.props.amount(index, "increase")
                               }
-
                             />
                             <p key={g.count}>{g.count}</p>
                             <OverlayCountImage
@@ -154,6 +154,13 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
+const ProductBrand = styled.p`
+  font-weight: normal;
+  margin-bottom: 5px;
+`;
+const ProductName = styled.p`
+  font-weight: normal;
+`;
 const FadeOuter = styled.div`
   position: fixed;
   top: 14%;
@@ -216,10 +223,8 @@ const OverlayCartFirst = styled.div`
   flex-direction: column;
   justify-content: space-around;
 `;
-const OverlayCartName = styled.p`
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 30px;
+const OverlayCartName = styled.div`
+  margin-bottom: 5px;
 `;
 const OverlayCurrency = styled.div`
   font-size: 16px;
