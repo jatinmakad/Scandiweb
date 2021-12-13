@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { act } from "react-dom/cjs/react-dom-test-utils.production.min";
 
 export const cartSlice = createSlice({
   name: "cart",
