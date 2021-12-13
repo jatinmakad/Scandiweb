@@ -27,7 +27,6 @@ class ProductDescription extends Component {
       this.props.state.productDescription.product;
     let regex = /(<([^>]+)>)/gi;
     let result = description.replace(regex, "");
-
     return (
       <ProductMain key={id}>
         <ProductLeft>
@@ -72,7 +71,7 @@ class ProductDescription extends Component {
           <AddCart style={addCart_style}>
             <span
               onClick={() =>
-                this.props.cart(this.props.state.productDescription, id, prices)
+                this.props.cart(this.props.state.productDescription.product, id, prices)
               }
             >
               Add To Cart
